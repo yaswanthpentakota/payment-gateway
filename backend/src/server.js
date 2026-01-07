@@ -1,6 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { initializeDatabase } from './config/db.js';
 import { getHealth } from './controllers/healthController.js';
 import routes from './routes/v1.js';
