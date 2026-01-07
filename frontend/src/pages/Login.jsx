@@ -12,7 +12,7 @@ const Login = () => {
         // Check if test merchant
         if (email === 'test@example.com') {
             try {
-                const response = await fetch('http://localhost:8000/api/v1/test/merchant');
+                const response = await fetch('/api/v1/test/merchant');
                 if (response.ok) {
                     const merchant = await response.json();
                     localStorage.setItem('merchant', JSON.stringify(merchant));
