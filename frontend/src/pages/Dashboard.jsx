@@ -78,6 +78,37 @@ const Dashboard = () => {
             </div>
 
             <div className="card">
+                <h3>Test Orders</h3>
+                <p>Create a test order to generate a checkout link.</p>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <button onClick={async () => {
+                        try {
+                            const res = await fetch('/api/v1/orders', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-Api-Key': merchant.api_key,
+                                    'X-Api-Secret': merchant.api_secret
+                                },
+                                body: JSON.stringify({ amount: 50000, currency: 'INR', receipt: `test_rcpt_${Date.now()}`, notes: { desc: 'Test Order' } })
+                            });
+                            if (res.ok) {
+                                const order = await res.json();
+                                const link = `http://localhost:3001/checkout?order_id=${order.id}`;
+                                const open = window.confirm(`Order Created! ID: ${order.id}\n\nDo you want to open the checkout page?`);
+                                if (open) window.open(link, '_blank');
+                            } else {
+                                alert('Failed to create order');
+                            }
+                        } catch (e) {
+                            console.error(e);
+                            alert('Error creating order');
+                        }
+                    }}>Create Test Order (₹500)</button>
+                </div>
+            </div>
+
+            <div className="card">
                 <h3>Stats</h3>
                 <div data-test-id="stats-container" className="stats-grid">
                     <div className="stat-item">
