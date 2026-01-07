@@ -8,6 +8,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/" element={<div style={{ padding: 20 }}>Please provide an order_id in the URL. Example: /checkout?order_id=...</div>} />
       </Routes>
     </Router>
   );
