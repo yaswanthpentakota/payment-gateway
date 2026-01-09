@@ -9,12 +9,14 @@ services:
       POSTGRES_USER: gateway_user
       POSTGRES_PASSWORD: gateway_pass
     ports:
-      - "5433:5432"
+      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U gateway_user -d payment_gateway"]
       interval: 10s
       timeout: 5s
       retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   api:
     build:
@@ -26,9 +28,16 @@ services:
       DATABASE_URL: postgresql://gateway_user:gateway_pass@postgres:5432/payment_gateway
       PORT: 8000
       TEST_MODE: "false"
+      TEST_PAYMENT_SUCCESS: "true"
+      TEST_PROCESSING_DELAY: "1000"
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   dashboard:
     build:
@@ -47,3 +56,6 @@ services:
       - "3001:80"
     depends_on:
       - api
+
+volumes:
+  postgres_data:

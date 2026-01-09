@@ -1,30 +1,35 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import dotenv from 'dotenv'
+dotenv.config()
 
-import express from 'express';
-import cors from 'cors';
-import { initializeDatabase } from './config/db.js';
-import { getHealth } from './controllers/healthController.js';
-import routes from './routes/v1.js';
+import express from 'express'
+import cors from 'cors'
+import { initializeDatabase } from './config/db.js'
+import { getHealth } from './controllers/healthController.js'
+import routes from './routes/v1.js'
 
-dotenv.config();
+const app = express()
+const PORT = process.env.PORT || 8000
 
-const app = express();
-const PORT = process.env.PORT || 8000;
+app.use(cors())
+app.use(express.json())
 
-app.use(cors());
-app.use(express.json());
+// Health endpoint
+app.get('/health', getHealth)
 
-// Main Routes
-app.get('/health', getHealth);
-app.use('/api/v1', routes);
+// API routes
+app.use('/api/v1', routes)
 
-// Start Server
+// Start server
 const startServer = async () => {
-    await initializeDatabase();
+  try {
+    await initializeDatabase()
     app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-    });
-};
+      console.log(`✅ Server running on http://localhost:${PORT}`)
+    })
+  } catch (error) {
+    console.error('❌ Failed to start server:', error)
+    process.exit(1)
+  }
+}
 
-startServer();
+startServer()

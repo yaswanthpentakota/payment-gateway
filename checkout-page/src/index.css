@@ -1,116 +1,30 @@
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+* {
   margin: 0;
   padding: 0;
-  background: #f5f5f5;
-}
-
-.checkout-container {
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 20px;
-}
-
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-}
-
-h2 {
-  margin-top: 0;
-}
-
-.methods {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.methods button {
-  flex: 1;
-  padding: 15px;
-  border: 1px solid #ddd;
-  background: white;
-  color: #333;
-  cursor: pointer;
-  border-radius: 4px;
-  font-weight: bold;
-}
-
-.methods button.active {
-  border-color: #007bff;
-  background: #e7f1ff;
-  color: #007bff;
-}
-
-.payment-form input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
   box-sizing: border-box;
 }
 
-.payment-form button {
+html, body, #root {
+  height: 100%;
   width: 100%;
-  padding: 15px;
-  background: #28a745;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1.1em;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+button {
   cursor: pointer;
+  border: none;
+  font-family: inherit;
 }
 
-.payment-form button:hover {
-  background: #218838;
-}
-
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  animation: spin 2s linear infinite;
-  margin: 0 auto 10px;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.success {
-  text-align: center;
-  color: #155724;
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-  padding: 20px;
-  border-radius: 8px;
-}
-
-.error {
-  text-align: center;
-  color: #721c24;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-  padding: 20px;
-  border-radius: 8px;
-}
-
-.error button {
-  background: #dc3545;
-  margin-top: 10px;
-  width: auto;
-  padding: 8px 20px;
+input, textarea, select {
+  font-family: inherit;
 }

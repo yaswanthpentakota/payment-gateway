@@ -1,87 +1,115 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import '../styles/Transactions.css'
 
-const Transactions = () => {
-    const navigate = useNavigate();
-    const [payments, setPayments] = useState([]);
+export default function Transactions() {
+  const navigate = useNavigate()
+  const [transactions, setTransactions] = useState([])
+  const [merchant, setMerchant] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        const stored = localStorage.getItem('merchant');
-        if (!stored) {
-            navigate('/login');
-            return;
+  useEffect(() => {
+    if (!localStorage.getItem('isLoggedIn')) {
+      navigate('/login')
+      return
+    }
+    fetchTransactions()
+  }, [])
+
+  const fetchTransactions = async () => {
+    try {
+      const merchantRes = await fetch('http://localhost:8000/api/v1/test/merchant')
+      const merchantData = await merchantRes.json()
+      setMerchant(merchantData)
+
+      const paymentsRes = await fetch('http://localhost:8000/api/v1/payments', {
+        headers: {
+          'X-Api-Key': merchantData.api_key,
+          'X-Api-Secret': merchantData.api_secret
         }
-        const merchant = JSON.parse(stored);
+      })
+      const paymentsData = await paymentsRes.json()
+      setTransactions(paymentsData || [])
+    } catch (err) {
+      console.error('Error:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-        const fetchPayments = async () => {
-            try {
-                const res = await fetch('http://localhost:8000/api/v1/payments', {
-                    headers: {
-                        'X-Api-Key': merchant.api_key,
-                        'X-Api-Secret': merchant.api_secret
-                    }
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    setPayments(data);
-                }
-            } catch (err) {
-                console.error('Failed to load transactions', err);
-            }
-        };
-        fetchPayments();
-    }, [navigate]);
+  const handleLogout = () => {
+    localStorage.clear()
+    navigate('/login')
+  }
 
-    const formatDate = (isoString) => {
-        // Spec Example: 2024-01-15 10:31:00
-        // I'll stick to a simple readable format or try to match exactly if strict.
-        // "2024-01-15 10:31:00"
-        if (!isoString) return '';
-        const d = new Date(isoString);
-        return d.toISOString().replace('T', ' ').substring(0, 19);
-    };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    return date.toLocaleString()
+  }
 
-    return (
-        <div className="dashboard-container">
-            <header>
-                <h2>Transactions</h2>
-                <nav>
-                    <Link to="/dashboard">Home</Link> | <Link to="/dashboard/transactions">Transactions</Link>
-                </nav>
-            </header>
+  const getStatusBadge = (status) => {
+    const badges = {
+      'success': '✅ Success',
+      'failed': '❌ Failed',
+      'processing': '⏳ Processing'
+    }
+    return badges[status] || status
+  }
 
-            <table data-test-id="transactions-table">
+  if (loading) return <div className="loading">Loading transactions...</div>
+
+  return (
+    <div className="transactions-wrapper">
+      <nav className="navbar">
+        <div className="nav-left">
+          <Link to="/dashboard" className="btn-back">← Dashboard</Link>
+          <h1>📊 Transactions</h1>
+        </div>
+        <div className="nav-right">
+          <button onClick={handleLogout} className="btn-logout">Logout</button>
+        </div>
+      </nav>
+
+      <div className="transactions-content">
+        <div className="transactions-inner">
+          {transactions.length === 0 ? (
+            <div className="empty-state">
+              <p>📭 No transactions yet</p>
+            </div>
+          ) : (
+            <div className="table-wrapper">
+              <table data-test-id="transactions-table">
                 <thead>
-                    <tr>
-                        <th>Payment ID</th>
-                        <th>Order ID</th>
-                        <th>Amount</th>
-                        <th>Method</th>
-                        <th>Status</th>
-                        <th>Created</th>
-                    </tr>
+                  <tr>
+                    <th>Payment ID</th>
+                    <th>Order ID</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                  </tr>
                 </thead>
                 <tbody>
-                    {payments.map(p => (
-                        <tr key={p.id} data-test-id="transaction-row" data-payment-id={p.id}>
-                            <td data-test-id="payment-id">{p.id}</td>
-                            <td data-test-id="order-id">{p.order_id}</td>
-                            <td data-test-id="amount">{p.amount}</td>
-                            {/* Spec Req: <td data-test-id="amount">50000</td>. So Raw Paise? 
-                  Example in spec shows "50000".
-                  But in Dashboard Stats: "₹5,00,000".
-                  In Transactions Table Example: "50000".
-                  So I will display raw value logic to match spec example "50000".
-              */}
-                            <td data-test-id="method">{p.method}</td>
-                            <td data-test-id="status">{p.status}</td>
-                            <td data-test-id="created-at">{formatDate(p.created_at)}</td>
-                        </tr>
-                    ))}
+                  {transactions.map((tx) => (
+                    <tr key={tx.id} data-test-id="transaction-row" data-payment-id={tx.id}>
+                      <td data-test-id="payment-id" className="mono">{tx.id}</td>
+                      <td data-test-id="order-id" className="mono">{tx.order_id}</td>
+                      <td data-test-id="amount">₹{(tx.amount / 100).toFixed(2)}</td>
+                      <td data-test-id="method" className="uppercase">{tx.method}</td>
+                      <td data-test-id="status">
+                        <span className={`badge badge-${tx.status}`}>
+                          {getStatusBadge(tx.status)}
+                        </span>
+                      </td>
+                      <td data-test-id="created-at">{formatDate(tx.created_at)}</td>
+                    </tr>
+                  ))}
                 </tbody>
-            </table>
+              </table>
+            </div>
+          )}
         </div>
-    );
-};
-
-export default Transactions;
+      </div>
+    </div>
+  )
+}

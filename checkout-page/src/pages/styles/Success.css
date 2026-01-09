@@ -1,0 +1,97 @@
+.success-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.success-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  padding: 40px;
+  text-align: center;
+}
+
+.success-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  animation: bounce 1s ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.success-card h1 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.success-card > p {
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+.payment-details {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.payment-details > div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.payment-details label {
+  font-weight: 600;
+  color: #666;
+}
+
+.payment-details span {
+  color: #333;
+}
+
+.mono {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #d4edda;
+  color: #155724;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.btn-new-payment {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-new-payment:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
