@@ -44,7 +44,7 @@ services:
       context: ./frontend
     container_name: gateway_dashboard
     ports:
-      - "3000:80"
+      - "3002:80"
     depends_on:
       - api
 
